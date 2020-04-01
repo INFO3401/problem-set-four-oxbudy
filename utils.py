@@ -1,11 +1,13 @@
 import pandas as pd
+from scipy import stats
 
 def helloWorld():
   print("Hello, World!")
 
 def loadAndCleanData(filename):
-    data = pd.read_csv(filename)
-    print(data)
+    data = pd.read_csv(filename, encoding='utf-8')
+    data = data.dropna(axis=0)
+    #print(data)
     return data
 
 def computeProbability(feature, bin, data):
@@ -25,3 +27,11 @@ def computeProbability(feature, bin, data):
 
     # Return the result
     return probability
+
+def getConfidenceIntervals(column, dataframe):
+    mean = dataframe[column].mean()
+    sigma = dataframe[column].std()
+    return stats.norm.interval(0.95, loc=mean, scale=sigma)
+
+def runTTest(column1, column2, dataframe):
+    return stats.ttest_ind(dataframe[column1], dataframe[column2])
